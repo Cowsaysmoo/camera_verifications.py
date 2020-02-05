@@ -1,11 +1,31 @@
 ###Alex Stephens, Jared Homer
+
 import cv2
 import numpy as np
 
-priPoint = np.array([349.3, 257.05])  #Test Values, unit=pixels
-focalLength = np.array([643.4886, 644.3349])  #Test Values, unit=pixels
-magFocalLength = np.linalg.norm(focalLength)  #Lambda in World Units
+FILE_NAME = "CameraParams.txt"
 
+input_file = open(FILE_NAME, 'r')
+data = []
+current_data = []
+
+for data_line in input_file:
+    line = data_line.strip()
+    if not line.startswith('#'):
+        input_data = data_line.rstrip()
+        input_data = input_data.split()
+        for val in input_data:
+            current_data.append(float(val))
+        data.append(current_data)
+        current_data = []
+
+focalLength = np.array(data[0])  # unit=pixels
+priPoint = np.array(data[1])  # unit=pixels
+
+#priPoint = np.array([349.3, 257.05])  #Test Values, unit=pixels
+#focalLength = np.array([643.4886, 644.3349])  #Test Values, unit=pixels
+
+magFocalLength = np.linalg.norm(focalLength)  #Lambda in World Units
 pixelHeight = np.array(focalLength[:] / magFocalLength)  #Pixel Heights Sx and Sy in World Units
 
 def onMouse(event, r, c, flags, param):  #Grabs mouse input and returns pixel coordinates (r,c) and image coordinates (u,v)
