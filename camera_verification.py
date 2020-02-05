@@ -34,9 +34,13 @@ def onMouse(event, r, c, flags, param):  #Grabs mouse input and returns pixel co
         pixCoord = np.array([r,c])
         #imCoord = (priPoint[0] - pixCoord[0],  priPoint[1] - pixCoord[1])
         imCoord = np.subtract(priPoint,pixCoord)
+        camCoordOverZ = np.divide(imCoord,focalLength)  #x/z and y/z
+        Z = 127 #Z in mm
+        camCoord = camCoordOverZ * Z
         print("Principal Point:", priPoint[:])  # For Testing
         print("Coordinates in Pixel Frame:", pixCoord[:]) #For Testing
         print("Coordinates in Image Frame:",  imCoord[:])  # For Testing
+        print("Coordinates in Camera Frame:", camCoord[:])  # For Testing
 
 capture = cv2.VideoCapture(0)
 print('Press ESC to Grab Image')
