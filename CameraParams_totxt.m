@@ -24,6 +24,11 @@ fprintf(fOut, '%f %f\r\n',cameraParams.Intrinsics.TangentialDistortion);
 fprintf(fOut, '%s\r\n', '#  Skew');
 fprintf(fOut, '%f\r\n',cameraParams.Intrinsics.Skew);
 
+fprintf(fOut, '%s\r\n', '#   intrinsicsMatrix');
+for i = 1:size(cameraParams.IntrinsicMatrix,1)
+    fprintf(fOut, '%f %f %f\r\n', cameraParams.IntrinsicMatrix(i,:));
+end
+
 fprintf(fOut, '%s\r\n', '#Extrinsics');
 fprintf(fOut, '%s\r\n', '#  RotationMatrices');
 
@@ -39,3 +44,5 @@ for i = 1:size(cameraParams.TranslationVectors, 1)
     fprintf(fOut, '#    TranslationVector %d\r\n', i);
     fprintf(fOut, '%f\r\n%f\r\n%f\r\n', cameraParams.TranslationVectors(i,:));
 end
+
+fclose(fOut);
