@@ -5,6 +5,8 @@ import numpy as np
 
 FILE_NAME = "CameraParams.txt"
 
+
+
 input_file = open(FILE_NAME, 'r')
 data = []
 current_data = []
@@ -18,6 +20,8 @@ for data_line in input_file:
             current_data.append(float(val))
         data.append(current_data)
         current_data = []
+
+input_file.close()
 
 focalLength = np.array(data[0])  # unit=pixels
 priPoint = np.array(data[1])  # unit=pixels
@@ -33,14 +37,14 @@ def onMouse(event, r, c, flags, param):  #Grabs mouse input and returns pixel co
     if event == cv2.EVENT_LBUTTONDOWN:
         pixCoord = np.array([r,c])
         #imCoord = (priPoint[0] - pixCoord[0],  priPoint[1] - pixCoord[1])
-        imCoord = np.subtract(priPoint,pixCoord)
-        camCoordOverZ = np.divide(imCoord,focalLength)  #x/z and y/z
+        #imCoord = np.subtract(priPoint,pixCoord)  unnecessary
+        #camCoordOverZ = np.divide(imCoord,focalLength)  #x/z and y/z unnecessary
         Z = 127 #Z in mm
-        camCoord = camCoordOverZ * Z
+        #camCoord = camCoordOverZ * Z  unnecessary
         print("Principal Point:", priPoint[:])  # For Testing
         print("Coordinates in Pixel Frame:", pixCoord[:]) #For Testing
-        print("Coordinates in Image Frame:",  imCoord[:])  # For Testing
-        print("Coordinates in Camera Frame:", camCoord[:])  # For Testing
+        #print("Coordinates in Image Frame:",  imCoord[:])  # For Testing unnecessary
+        #print("Coordinates in Camera Frame:", camCoord[:])  # For Testing unnecessary
 
 capture = cv2.VideoCapture(0)
 print('Press ESC to Grab Image')
