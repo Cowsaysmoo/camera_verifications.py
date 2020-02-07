@@ -5,8 +5,6 @@ import numpy as np
 
 FILE_NAME = "CameraParams.txt"
 
-
-
 input_file = open(FILE_NAME, 'r')
 data = []
 current_data = []
@@ -29,22 +27,36 @@ priPoint = np.array(data[1])  # unit=pixels
 #priPoint = np.array([349.3, 257.05])  #Test Values, unit=pixels
 #focalLength = np.array([643.4886, 644.3349])  #Test Values, unit=pixels
 
+extRotMatrix = np.array(data[9:12][:])
+extTransVect = np.array(data[69:72][:])
+
+extMatrix = np.concatenate((extRotMatrix, extTransVect), axis=1)
+extMatrix = np.concatenate((extMatrix, np.array([[0,0,0,1]])), axis=0)
+print(extMatrix)
+
 magFocalLength = np.linalg.norm(focalLength)  #Lambda in World Units
 pixelHeight = np.array(focalLength[:] / magFocalLength)  #Pixel Heights Sx and Sy in World Units
+
+
 
 def onMouse(event, r, c, flags, param):  #Grabs mouse input and returns pixel coordinates (r,c) and image coordinates (u,v)
     global pixCoord, imCoord
     if event == cv2.EVENT_LBUTTONDOWN:
         pixCoord = np.array([r,c])
         #imCoord = (priPoint[0] - pixCoord[0],  priPoint[1] - pixCoord[1])
-        #imCoord = np.subtract(priPoint,pixCoord)  unnecessary
-        #camCoordOverZ = np.divide(imCoord,focalLength)  #x/z and y/z unnecessary
+        imCoord = np.subtract(priPoint,pixCoord)
+        camCoordOverZ = np.divide(imCoord,focalLength)  #x/z and y/z unnecessary
         Z = 127 #Z in mm
-        #camCoord = camCoordOverZ * Z  unnecessary
+        camCoord = camCoordOverZ * Z
+        camCoord = np.append(camCoord, [Z, 1])
+        camCoord = camCoord.reshape((4,1))
+        worldCoord = np.dot(extMatrix, camCoord)
         print("Principal Point:", priPoint[:])  # For Testing
         print("Coordinates in Pixel Frame:", pixCoord[:]) #For Testing
         #print("Coordinates in Image Frame:",  imCoord[:])  # For Testing unnecessary
-        #print("Coordinates in Camera Frame:", camCoord[:])  # For Testing unnecessary
+        print("Coordinates in Camera Frame:", camCoord[:])  # For Testing unnecessary
+        print("Coordinates in World Frame:", worldCoord)
+
 
 capture = cv2.VideoCapture(0)
 print('Press ESC to Grab Image')
