@@ -6,5 +6,7 @@ Running this script will create a .txt file (CameraParams.txt) that will be read
 
 ## camera_verifications.py (Requires OpenCV2 and numpy)
 * This script assumes that you have selected an image to represent your world frame (By default image 1), and have measured the Z distance to this frame from your camera.
+* You must change the Z value in the code if you wish to use your own Z value and image capture.
+* For testing purposes, you may wish to use the CameraParams.txt and Image1.png. If you wish to do so, you must uncomment line 79 in the python script, camera_verifications.py
 
 Running this script will open a live webcam feed that will grab an image when Esc is pressed. The image grabbed will then be displayed, allowing the user to select points represented in the image frame. These points will be plotted onto the image, with their coordinates in the World Frame outputted to the python console window.
