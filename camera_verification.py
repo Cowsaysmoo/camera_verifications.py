@@ -2,6 +2,7 @@
 
 import cv2
 import numpy as np
+import copy
 
 FILE_NAME = "CameraParams.txt"
 
@@ -41,11 +42,18 @@ inv_intermed_mat = np.linalg.pinv(intermed_mat)
 
 magFocalLength = np.linalg.norm(focalLength)  #Lambda in World Units
 pixelHeight = np.array(focalLength[:] / magFocalLength)  #Pixel Heights Sx and Sy in World Units
-
+global count
+count = 0
 def onMouse(event, r, c, flags, param):  #Grabs mouse input and returns pixel coordinates (r,c) and image coordinates (u,v)
     global rcCoords, uvCoords
     if event == cv2.EVENT_LBUTTONDOWN:
+        global picturePoint
+        global count
         rcCoords = np.array([r,c])
+        picturePoint = copy.deepcopy(picture)
+        cv2.circle(picturePoint, (int(rcCoords[0]), int(rcCoords[1])), 5, (255, 0, 0), thickness=-1)
+        cv2.putText(picturePoint, "Selected Point", (int(rcCoords[0] - 25), int(rcCoords[1] - 10)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.25, (255, 0, 0))
         uvCoords = np.subtract(priPoint, rcCoords)
         uvCoords = np.divide(uvCoords, focalLength)
         xyCoords = Z * uvCoords
@@ -54,6 +62,12 @@ def onMouse(event, r, c, flags, param):  #Grabs mouse input and returns pixel co
         worldCoords = worldCoords / worldCoords[3]  # using final value as scale factor
         print("World Coordinates")
         print(worldCoords)  # close enough
+        #cv2.destroyAllWindows()
+        cv2.imshow('Selected point', picturePoint)  #Displays selected point
+        cv2.setMouseCallback('Selected point', onMouse)
+        cv2.imwrite("Point " + str(count) + ".png", picturePoint)
+        print("Saved Image for Point " + str(count) + ".png")  #Saves copy of image for each point selected
+        count = count + 1
 
 capture = cv2.VideoCapture(0)
 print('Press ESC to Grab Image')
@@ -80,6 +94,7 @@ capture.release()
 cv2.destroyAllWindows()
 escape = False
 while not escape:
+    global picturePoint
     cv2.imshow('picture', picture)
     cv2.setMouseCallback('picture', onMouse)  #Ties onMouse function to 'picture' window
     key = cv2.waitKey(0)
