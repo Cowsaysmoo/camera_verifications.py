@@ -31,7 +31,7 @@ extTransVect = np.array(data[69:72][:])
 
 extMatrix = np.concatenate((extRotMatrix, np.transpose(extTransVect)), axis=0)
 
-Z = 444.5
+Z = 520.7
 
 # origin transformed from world to camera frame
 origin_world = np.array([0,0,0,1])
@@ -46,14 +46,11 @@ def onMouse(event, r, c, flags, param):  #Grabs mouse input and returns pixel co
     global rcCoords, uvCoords
     if event == cv2.EVENT_LBUTTONDOWN:
         rcCoords = np.array([r,c])
-        uvCoords = np.subtract(priPoint, rcCoords)
-        uvCoords = np.divide(uvCoords, focalLength)
-        xyCoords = Z * uvCoords
-        xyCoords = np.append(xyCoords, 1)
-        worldCoords = np.dot(xyCoords, inv_intermed_mat)
-        worldCoords = worldCoords / worldCoords[3]  # using final value as scale factor
+        rcCoords = np.append(rcCoords, 1)
+        
+        worldCoords = np.dot(rcCoords, inv_intermed_mat)
         print("World Coordinates")
-        print(worldCoords)  # close enough
+        print("(" + str(worldCoords[0]) + ", " + str(worldCoords[1]) + ")")
 
 capture = cv2.VideoCapture(0)
 print('Press ESC to Grab Image')
@@ -79,6 +76,13 @@ while not escape:  #Displays webcam feed and saves the last frame before ESC is 
 capture.release()
 cv2.destroyAllWindows()
 escape = False
+picture = cv2.imread("Image1.png")
+cv2.circle(picture, (int(origin_cam[0]), int(origin_cam[1])), 5, (255,0,0), thickness=-1)
+cv2.putText(picture, "World Origin", (int(origin_cam[0] - 25), int(origin_cam[1] - 10)),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.25, (255,0,0))
+cv2.circle(picture, (int(priPoint[0]), int(priPoint[1])), 5, (0,0,255), thickness=-1)
+cv2.putText(picture, "Principal Pt", (int(priPoint[0] - 25), int(priPoint[1] - 10)),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.25, (0, 0, 255))
 while not escape:
     cv2.imshow('picture', picture)
     cv2.setMouseCallback('picture', onMouse)  #Ties onMouse function to 'picture' window
