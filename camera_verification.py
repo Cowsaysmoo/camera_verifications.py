@@ -76,7 +76,7 @@ cv2.destroyAllWindows()
 escape = False
 # Commented out if using capture from video
 # Uncomment if using file Image1.png, the first image from MATLAB's calibrator
-picture = cv2.imread("Image1.png")  # for testing using the image used to determine world frame
+#picture = cv2.imread("Image1.png")  # for testing using the image used to determine world frame
 while not escape:
     cv2.imshow('picture', picture)
     cv2.setMouseCallback('picture', onMouse)  #Ties onMouse function to 'picture' window
