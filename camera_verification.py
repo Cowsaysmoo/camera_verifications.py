@@ -49,10 +49,10 @@ def onMouse(event, r, c, flags, param):  #Grabs mouse input and returns pixel co
         worldCoords = np.dot(rcCoords, inv_intermed_mat)
         print("World Coordinates")
         print("(" + str(worldCoords[0]) + ", " + str(worldCoords[1]) + ")")
-        cv2.circle(picture, (int(rcCoords[0]), int(rcCoords[1])), 3, (0, 255, 0), thickness=-1)
+        cv2.circle(picture, (int(rcCoords[0]), int(rcCoords[1])), 3, (0, 0, 255), thickness=-1)
         cv2.putText(picture, "(" + str(round(worldCoords[0], 2)) + "," + str(round(worldCoords[1],2)) + ")",
                     (int(rcCoords[0] - 30), int(rcCoords[1] - 10)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 255, 0))
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.33, (0, 0, 255))
 
         cv2.imshow("picture", picture)
 
